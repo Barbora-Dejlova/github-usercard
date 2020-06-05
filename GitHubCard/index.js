@@ -3,6 +3,18 @@
     (replacing the placeholder with your Github name):
     https://api.github.com/users/<your name>
 */
+const cards = document.querySelector(".cards");
+
+axios.get("https://api.github.com/users/Barbora-Dejlova")
+.then(response => {
+    const newUserCard = cardCreator(response.data)
+    cards.appendChild(newUserCard)
+})
+.catch( error => {
+  console.log(error);
+})
+
+
 
 /*
   STEP 2: Inspect and study the data coming back, this is YOUR
@@ -28,7 +40,7 @@
     user, and adding that card to the DOM.
 */
 
-const followersArray = [];
+const followersArray = ["tetondan" , "dustinmyers", "justsml", "luishrd", "bigknell"];
 
 /*
   STEP 3: Create a function that accepts a single object as its only argument.
@@ -58,3 +70,55 @@ const followersArray = [];
     luishrd
     bigknell
 */
+
+
+function cardCreator(object) {
+  const card = document.createElement('div')
+  const image = document.createElement('img')
+  const cardInfo = document.createElement('div')
+  const name = document.createElement('h3')
+  const username = document.createElement('p')
+  const location = document.createElement('p')
+  const profile = document.createElement('p')
+  const githubPage = document.createElement('a')
+  const followers = document.createElement('p')
+  const following = document.createElement('p')
+  const bio = document.createElement('p')
+
+  card.classList.add('card')
+  image.src = object.avatar_url
+  cardInfo.classList.add('card-info')
+  name.classList.add('name')
+  name.textContent = object.name
+  username.textContent = object.login
+  location.textContent = `Location: ${object.location}`
+  profile.textContent = 'Profile: '
+  githubPage.href = 'https://github.com/Barbora-Dejlova'
+  followers.textContent = `Followers: ${object.followers}`
+  following.textContent = `Following: ${object.following}`
+  bio.textContent = `Bio: ${object.bio}`
+
+  profile.appendChild(githubPage)
+  cardInfo.appendChild(name)
+  cardInfo.appendChild(username)
+  cardInfo.appendChild(location)
+  cardInfo.appendChild(profile)
+  cardInfo.appendChild(followers)
+  cardInfo.appendChild(following)
+  cardInfo.appendChild(bio)
+  
+  card.appendChild(image)
+  card.appendChild(cardInfo)
+
+  return card
+}
+
+followersArray.forEach( item => {
+axios.get(`https://api.github.com/users/${item}`)
+.then(response => {
+    const newUserCard = cardCreator(response.data);
+    cards.appendChild(newUserCard)
+  })
+.catch( error => {
+  console.log(error) })
+})
